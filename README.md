@@ -14,6 +14,9 @@ mluveného korpusu ÚČNK (http://www.korpus.cz). Vstupem mu je soubor `.eaf`
 obsahující přepis sondy v programu [ELAN](tla.mpi.nl/tools/tla-tools/elan/)
 podle platných interních pravidel ÚČNK.
 
+Zpětnou vazbu posílejte na e-mailovou adresu uvedenou
+[v mém profilu na githubu](http://github.com/dafydd-lukes/).
+
 ## Instalace
 
 Stáhněte si soubor `trans-ver-standalone.jar` z následující adresy:
@@ -36,7 +39,7 @@ Dokumentace k programu je dostupná [zde](./doc/intro.md).
 ## Řešení problémů <a name="problemy"></a>
 
 1. Mnoho problémů by mělo jít vyřešit instalací nejnovější verze Javy (JRE 7),
-   dostupné z http://www.java.com/en/download.
+   dostupné z http://www.java.com/download.
 
 2. Pokud v systému **Windows nefunguje spouštění dvojklikem** na soubor
    `trans-ver-standalone.jar`:
