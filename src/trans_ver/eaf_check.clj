@@ -1,7 +1,34 @@
 (ns trans-ver.eaf-check
   (:require [trans-ver.valtests :as vt]
             [trans-ver.formatting :as frmt]
-            [clojure.xml :as xml]))
+            [clojure.xml :as xml]
+            ;; [clojure.data.xml :as xml]
+            ;; prxml
+            [clojure.java.io :as io]
+            [clojure.walk :as walk]
+            [clojure.string :as str]))
+
+
+;; this would work to convert between clojure.xml and clojure.data.xml
+;; representations of xml structure (with perhaps a few slight modifications if
+;; postwalk could handle records...
+;; (defn conv [x]
+;;   (if (instance? clojure.lang.PersistentStructMap x)
+;;     (clojure.data.xml/map->Element (apply array-map (apply concat (seq x))))
+;;     x))
+    ;; (-> x
+    ;;     ;; bc thread macro inserts previous form as 2nd element in next form
+    ;;     (#(if (= (:attrs %) nil)
+    ;;         (assoc % :attrs {}) %))
+    ;;     (#(if (= (:content %) nil)
+    ;;       (assoc % :content '())
+    ;;       (assoc % :content (lazy-seq (:content %))))))
+    ;; x))
+
+;; (defn parse [eaf-file]
+;;   "Just a wrapper for the function to be accessible from this namespace (for
+;;   the GUI)."
+;;   (xml/parse-str (slurp eaf-file)))
 
 (defn parse [eaf-file]
   "Just a wrapper for the function to be accessible from this namespace (for
@@ -46,6 +73,71 @@
                     (map seg-length-in-annot)
                     (remove nil?))]]
     check)))
+
+(def annot-template
+  {:tag :ANNOTATION,
+   :content
+   [{:tag :ALIGNABLE_ANNOTATION,
+     :attrs {}
+     :content
+     [{:tag :ANNOTATION_VALUE,
+       :content
+       ["nil"]}]}]})
+
+(def tier-template
+  {:tag :TIER,
+   :attrs
+   {:ANNOTATOR "TransVer",
+    :DEFAULT_LOCALE "cs",
+    :LINGUISTIC_TYPE_REF "meta",
+    :PARTICIPANT "všichni",
+    :TIER_ID "KONTROLA DÉLKY SEGMENTŮ"},
+   :content []})
+
+(defn summarize-seg-length-errors [eaf eaf-ort times]
+  "Return hash-map representation of .eaf file with seg length error tier."
+  (let [eaf-atom (atom eaf)
+        ;; we need to know at which index we'll be putting the new tier in the
+        ;; :content of the eaf
+        last-idx (count (:content eaf))]
+    (swap! eaf-atom update-in [:content] #(conj % tier-template))
+    (doseq [error (seg-lengths-in-ort eaf-ort)]
+      (let [{:keys [id ts1 ts2 length]} error,
+            err-id (str "err-" id),
+            err-ts1 (str "err-" ts1),
+            err-ts2 (str "err-" ts2),
+            error-annot (assoc-in annot-template [:content 0 :attrs]
+                                  {:ANNOTATION_ID err-id,
+                                   :TIME_SLOT_REF1 err-ts1,
+                                   :TIME_SLOT_REF2 err-ts2})]
+        (swap! eaf-atom update-in [:content last-idx :content]
+               #(conj % error-annot))))
+    (frmt/xmlrepr->str @eaf-atom)))
+
+;; (defn list->vec [elem]
+;;   (if (seq? elem)
+;;     (vec elem)
+;;     elem))
+
+;; (defn summarize-seg-length-errors [eaf eaf-ort times]
+;;   "Return hash-map representation of .eaf file with seg length error tier."
+;;   (let [eaf-atom (atom (walk/postwalk list->vec eaf))
+;;         ;; we need to know at which index we'll be putting the new tier in the
+;;         ;; :content of the eaf
+;;         last-idx (count (:content eaf))]
+;;     (swap! eaf-atom update-in [:content] #(conj % tier-template))
+;;     (doseq [error (seg-lengths-in-ort eaf-ort)]
+;;       (let [{:keys [id ts1 ts2 length]} error,
+;;             err-id (str "err-" id),
+;;             err-ts1 (str "err-" ts1),
+;;             err-ts2 (str "err-" ts2),
+;;             error-annot (assoc-in annot-template [:content 0 :attrs]
+;;                                   {:ANNOTATION_ID err-id,
+;;                                    :TIME_SLOT_REF1 err-ts1,
+;;                                    :TIME_SLOT_REF2 err-ts2})]
+;;         (swap! eaf-atom update-in [:content last-idx :content]
+;;                #(conj % error-annot))))
+;;     @eaf-atom))
 
 ;;;; ALIGNMENT
 

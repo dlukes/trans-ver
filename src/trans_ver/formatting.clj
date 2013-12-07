@@ -1,15 +1,18 @@
-(ns trans-ver.formatting)
+(ns trans-ver.formatting
+  (require [clojure.walk :as walk]
+           [clojure.string :as str]
+           [clojure.xml :as xml]))
 ;  (require [trans-ver.eaf-check :as eaf]))
 
 ;; format alignment table
 
-(defn max-seq [seq]
-  "Returns maximum length element in seq."
+(defn max-seq [coll]
+  "Returns maximum length element in coll."
   (reduce #(if (> (count %1)
                   (count %2))
              %1
              %2)
-          seq))
+          coll))
 
 (defn extend-seq [n seq]
   "Adds empty strings to seq until it has n elements overall."
@@ -31,3 +34,21 @@
         separator (apply str (repeat (dec (count header)) "="))]
     (apply str header separator "\n"
      (map #(format (str "| %" max-ort "s | %" max-fon "s |\n") %1 %2) ort fon))))
+
+;; format output XML (eaf) with KONTROLA tier
+
+(defn apostrophe->tab [elem]
+  "If elem is a string, replace former tabs with spaces and apostrophes with
+  tabs."
+  (if (string? elem)
+    (-> elem
+        (str/replace #"\t" " ")
+        (str/replace #"'" "\t"))
+    elem))
+
+(defn xmlrepr->str [eaf]
+  (-> eaf
+      (#(walk/postwalk apostrophe->tab %))
+      (#(with-out-str (xml/emit %)))
+      (str/replace #"'" "\"")
+      (str/replace #"\t" "'")))

@@ -4,7 +4,9 @@
   :license {:name "GPLv3"
             :url "http://www.gnu.org/licenses/gpl.txt"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [seesaw "1.4.4"]]
+                 [seesaw "1.4.4"]
+                 [prxml "1.3.1"]
+                 [org.clojure/data.xml "0.0.7"]]
   :main ^:skip-aot trans-ver.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

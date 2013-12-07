@@ -9,22 +9,22 @@
 
 (native!)
 
+;;;; MAIN FRAME
+
+(def main-frame (frame :title "ÚČNK TransVer"
+                       :size [640 :by 480]))
+
 ;;;; HELPER FUNCTIONS
 
 (defn display [content]
   (config! main-frame :content content)
   content)
 
-;;;; MAIN FRAME
-
-(def main-frame (frame :title "ÚČNK TransVer"
-                       :size [640 :by 480]))
-
 ;;;; FEEDBACK AREA
 
 (def feedback-area (text :editable? false
                   :multi-line? true
-                  :font "MONOSPACED"))
+                  :font "MONOSPACED-12"))
 
 ;;;; FILE CHOOSING
 
@@ -39,11 +39,17 @@
 
 ;;; font size
 
+;(declare change-font-size)
+
 (def font-size-combobox
-  (combobox
-                                        ;:maximum-size [100 :by 50]
-   :model [10 12 14 16]))
-                                        ;                  :preferred-size [10 :by 10])))
+  (->
+   (combobox
+    :listen [:action (fn [e]
+                       (config! feedback-area
+                                :font (str "MONOSPACED-"
+                                           (selection font-size-combobox))))]
+    :model [10 12 14 16 18 20])
+   (selection! 12)))
 
 ;;; task selection
 
@@ -74,22 +80,11 @@
 (display (border-panel
           :north (horizontal-panel :items [choose-eaf-file-field run-checks-button])
           :center (scrollable feedback-area)
-          ;; :east (vertical-panel :items select-tasks-checkboxes)
-          ;; :east (vertical-panel :border ""
-          ;;        :items (concat select-tasks-checkboxes
-          ;;                                      font-size-combobox))
-          ;; :east select-tasks-checkboxes
-          ;;               font-size-combobox)
           :east (mig-panel :items
                            `[["Proveď kontrolu:" "wrap"]
                              ~@select-tasks-checkboxes
                              ["Velikost písma:" "wrap"]
                              [~font-size-combobox "wrap"]])
-          ;; :east (vertical-panel :items
-          ;;                  ["Proveď kontrolu:"
-          ;;                   ;[select-tasks-checkboxes ""]
-          ;;                   "Velikost písma:"
-          ;;                   font-size-combobox])
           :vgap 5 :hgap 5 :border 5))
 
 (defn initialize-gui []
