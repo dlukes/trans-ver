@@ -52,3 +52,17 @@
       (#(with-out-str (xml/emit %)))
       (str/replace #"'" "\"")
       (str/replace #"\t" "'")))
+
+;; converting millis
+
+(defn parse-int [s]
+  (Integer/parseInt (re-find #"\A-?\d+" s)))
+
+(defn millis->readable [millis-string]
+  "Convert a time string from number of milliseconds to hh:mm:ss.ms."
+  (let [millis (parse-int millis-string)]
+    (format "%02d:%02d:%02d.%d"
+            (int (/ millis 1000 60 60))
+            (mod (int (/ millis 1000 60)) 60)
+            (mod (int (/ millis 1000)) 60)
+            (rem millis 1000))))

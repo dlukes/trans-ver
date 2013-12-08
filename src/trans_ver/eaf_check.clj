@@ -1,16 +1,16 @@
 (ns trans-ver.eaf-check
   (:require [trans-ver.valtests :as vt]
             [trans-ver.formatting :as frmt]
-            [clojure.xml :as xml]
+            [clojure.xml :as xml]))
             ;; [clojure.data.xml :as xml]
             ;; prxml
-            [clojure.java.io :as io]
-            [clojure.walk :as walk]
-            [clojure.string :as str]))
+            ;; [clojure.java.io :as io]
+            ;; [clojure.walk :as walk]
+            ;; [clojure.string :as str]))
 
 
 ;; this would work to convert between clojure.xml and clojure.data.xml
-;; representations of xml structure (with perhaps a few slight modifications if
+;; representations of xml structure (with perhaps a few slight modifications) if
 ;; postwalk could handle records...
 ;; (defn conv [x]
 ;;   (if (instance? clojure.lang.PersistentStructMap x)
@@ -46,9 +46,16 @@
    (:content eaf)))
 
 (defn times [eaf]
-  (first (filter
-          #(= (:tag %) :TIME_ORDER)
-          (:content eaf))))
+  "Return idx and id->val map of TIME_ORDER element."
+  (let [idx (inc (last
+                  (for [[idx tier] (map-indexed vector (:content eaf))
+                        :while (not (= (:tag tier) :TIME_ORDER))]
+                    idx)))
+        id->val (reduce #(assoc %1 (get-in %2 [:attrs :TIME_SLOT_ID])
+                                (get-in %2 [:attrs :TIME_VALUE]))
+                        {} (get-in eaf [:content idx :content]))]
+    [idx id->val]))
+
 
 ;;;; SEG LENGTHS
 
@@ -94,24 +101,44 @@
     :TIER_ID "KONTROLA DÉLKY SEGMENTŮ"},
    :content []})
 
+(def timeslot-template
+  {:tag :TIME_SLOT,
+   :attrs {},
+   :content nil})
+
 (defn summarize-seg-length-errors [eaf eaf-ort times]
   "Return hash-map representation of .eaf file with seg length error tier."
   (let [eaf-atom (atom eaf)
         ;; we need to know at which index we'll be putting the new tier in the
         ;; :content of the eaf
-        last-idx (count (:content eaf))]
+        last-idx (count (:content eaf))
+        ;; and the idx and id->val map of the TIME_ORDER tier
+        [times-idx times-id->val] times]
     (swap! eaf-atom update-in [:content] #(conj % tier-template))
     (doseq [error (seg-lengths-in-ort eaf-ort)]
       (let [{:keys [id ts1 ts2 length]} error,
             err-id (str "err-" id),
             err-ts1 (str "err-" ts1),
             err-ts2 (str "err-" ts2),
-            error-annot (assoc-in annot-template [:content 0 :attrs]
-                                  {:ANNOTATION_ID err-id,
-                                   :TIME_SLOT_REF1 err-ts1,
-                                   :TIME_SLOT_REF2 err-ts2})]
+            ts1-val (times-id->val ts1),
+            ts2-val (times-id->val ts2),
+            error-annot (-> annot-template
+                            (assoc-in [:content 0 :attrs]
+                                      {:ANNOTATION_ID err-id,
+                                       :TIME_SLOT_REF1 err-ts1,
+                                       :TIME_SLOT_REF2 err-ts2})
+                            (assoc-in [:content 0 :content 0 :content 0]
+                                      (str "PŘÍLIŠ DLOUHÝ SEGMENT: " length))),
+            ts1-annot (assoc timeslot-template :attrs
+                             {:TIME_SLOT_ID err-ts1, :TIME_VALUE ts1-val}),
+            ts2-annot (assoc timeslot-template :attrs
+                             {:TIME_SLOT_ID err-ts2, :TIME_VALUE ts2-val})]
+        ;; add the new error annotation
         (swap! eaf-atom update-in [:content last-idx :content]
-               #(conj % error-annot))))
+               #(conj % error-annot))
+        ;; add its time indices to the TIME_ORDER element
+        (swap! eaf-atom update-in [:content times-idx :content]
+               #(conj % ts1-annot ts2-annot))))
     (frmt/xmlrepr->str @eaf-atom)))
 
 ;; (defn list->vec [elem]
@@ -161,7 +188,8 @@
       {:ort
        {:cont ort-tokens}
        :fon
-       {:cont fon-tokens}})))
+       {:cont fon-tokens}
+       :TIME_SLOT_REF1 ts1})))
 
 (defn alignment-of-ort-and-fon [eaf-ort eaf-fon]
   "Return ort and fon segment pairs which are not aligned."
@@ -182,14 +210,16 @@
 
 ;             (remove nil?)))))
 
-(defn summarize-alignment-errors [eaf-ort eaf-fon]
+(defn summarize-alignment-errors [eaf-ort eaf-fon times-id->val]
   "Return a string which describes alignment errors in eaf-ort vs eaf-fon."
   (apply str
    (flatten
     (for [tier (alignment-of-ort-and-fon eaf-ort eaf-fon)]
-      (concat ["\n" (repeat 79 "#")
+      (concat ["\n" (repeat 30 "-")
                "\nVrstva: " (:tier-id tier) "\n"]
               (for [[num al] (map-indexed vector (:align tier))
                     :when al]
-                (str "\nSegment č. " (inc num) " v této vrstvě.\n"
-                 (frmt/format-alignment-table al))))))))
+                (str "\nSegment č. " (inc num) " v této vrstvě; čas: "
+                     (frmt/millis->readable
+                      (times-id->val (:TIME_SLOT_REF1 al))) ".\n"
+                     (frmt/format-alignment-table al))))))))

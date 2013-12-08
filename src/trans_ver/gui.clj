@@ -1,6 +1,7 @@
 (ns trans-ver.gui
   (require [trans-ver.eaf-check :as eaf]
-           [clojure.java.io :as io])
+           [clojure.java.io :as io]
+           [clojure.string :as str])
   (use seesaw.core
        seesaw.dev
        seesaw.font
@@ -9,10 +10,15 @@
 
 (native!)
 
+;;;; USEFUL VARIABLES
+
+(def file-sep (System/getProperty "file.separator"))
+
 ;;;; MAIN FRAME
 
 (def main-frame (frame :title "ÚČNK TransVer"
-                       :size [640 :by 480]))
+                       :size [640 :by 480]
+                       :on-close :exit))
 
 ;;;; HELPER FUNCTIONS
 
@@ -42,14 +48,21 @@
 ;(declare change-font-size)
 
 (def font-size-combobox
-  (->
    (combobox
     :listen [:action (fn [e]
                        (config! feedback-area
                                 :font (str "MONOSPACED-"
                                            (selection font-size-combobox))))]
-    :model [10 12 14 16 18 20])
-   (selection! 12)))
+    :model [10 12 14 16 18 20]))
+
+;; FIXME: somehow, when this is done with a thread macro in the definition
+;; above, the file refuses to compile:
+
+;; CompilerException java.lang.IllegalArgumentException: No implementation of
+;; method: :get-selection of protocol: #'seesaw.selection/Selection found for
+;; class: nil, compiling:(gui.clj:52:4)
+
+(selection! font-size-combobox 12)
 
 ;;; task selection
 
@@ -58,19 +71,43 @@
   (map #(vector (checkbox :id %1 :text %2 :tip %3) %4)
        [:align :lengths :fon]
        ["Alignace" "Délky segmentů" "Přepisu fon"]
-       ["FIXME" "FIXME" "FIXME"]
+       ["Zkontrolovat, zda si odpovídají \"slova\" na vrstvách ort a fon."
+        "Označit segmenty delší než 25 \"slov\"."
+        "Zatím není implementováno :("]
        (repeat "wrap")))
 
 ;;;; RUNNING CHECKS
 
+(defn check-seg-lengths [eaf file]
+  (let [new-eaf-file (str (.getParent (.getAbsoluteFile file))
+                          file-sep
+                          (str/replace (.getName file) #"\.eaf" " ")
+                          (new java.util.Date)
+                          ".eaf")
+        feedback-str (str "Vytvořen soubor \"" new-eaf-file
+                      "\" s vrstvou KONTROLA DÉLKY SEGMENTŮ.\n\n")]
+    (spit new-eaf-file
+          (eaf/summarize-seg-length-errors eaf (eaf/ort eaf) (eaf/times eaf)))
+    (str feedback-str (apply str (repeat (- (count feedback-str) 2) "#")) "\n\n")))
+
 (defn run-checks [e]
-  (let [file (text choose-eaf-file-field)]
-    (if (.exists (io/as-file file))
+  (let [file (io/as-file (text choose-eaf-file-field))]
+    (if (.exists file)
       (let [eaf (eaf/parse file)
             ort (eaf/ort eaf)
             fon (eaf/fon eaf)]
-        (text! feedback-area
-               (eaf/summarize-alignment-errors ort fon)))
+        (text! feedback-area (str
+                              ;; seg lengths checks
+                              (if (selection (select main-frame [:#lengths]))
+                                (str "KONTROLA DÉLKY SEGMENTŮ\n"
+                                     (check-seg-lengths eaf file)))
+                              ;; alignment checks
+                              (if (selection (select main-frame [:#align]))
+                                (str "KONTROLA ALIGNACE ORT A FON\n"
+                                     (eaf/summarize-alignment-errors ort fon
+                                                                     (second
+  (eaf/times eaf)))))))
+        (scroll! feedback-area :to :top))
       (alert "Zadaná cesta k souboru není platná."))))
 
 (def run-checks-button
@@ -90,6 +127,7 @@
 (defn initialize-gui []
   (invoke-later
    (show! main-frame)
-   (config! (select main-frame [:#fon]) :enabled? false)))
+   (config! (select main-frame [:#fon]) :enabled? false)
+   (selection! (select main-frame [:#align]) true)))
 
-(initialize-gui)
+; (initialize-gui)
