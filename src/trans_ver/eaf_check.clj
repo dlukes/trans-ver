@@ -196,8 +196,8 @@
 ;  (concat
           (for [ort-tier eaf-ort,
                 fon-tier eaf-fon,
-                :when (= (-> fon-tier :attrs :PARTICIPANT)
-                         (-> ort-tier :attrs :PARTICIPANT)),
+                :when (= (-> fon-tier :attrs :PARENT_REF)
+                         (-> ort-tier :attrs :TIER_ID)),
                 :let [tier-id (str
                                (-> fon-tier :attrs :TIER_ID)
                                " & "
