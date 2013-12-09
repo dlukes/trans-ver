@@ -106,12 +106,23 @@
    :attrs {},
    :content nil})
 
+(defn kontrola-tier? [tier]
+    (or
+     (= (get-in tier [:attrs :TIER_ID])
+        (get-in tier-template [:attrs :TIER_ID]))
+     (= (get-in tier [:attrs :ANNOTATOR])
+        (get-in tier-template [:attrs :ANNOTATOR]))))
+
+(defn remove-kontrola-tier [eaf]
+  "Remove previous KONTROLA tier if it exists."
+  (update-in eaf [:content] #(vec (remove kontrola-tier? %))))
+
 (defn summarize-seg-length-errors [eaf eaf-ort times]
   "Return hash-map representation of .eaf file with seg length error tier."
-  (let [eaf-atom (atom eaf)
+  (let [eaf-atom (atom (remove-kontrola-tier eaf))
         ;; we need to know at which index we'll be putting the new tier in the
         ;; :content of the eaf
-        last-idx (count (:content eaf))
+        last-idx (count (:content @eaf-atom))
         ;; and the idx and id->val map of the TIME_ORDER tier
         [times-idx times-id->val] times]
     (swap! eaf-atom update-in [:content] #(conj % tier-template))

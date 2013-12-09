@@ -3,7 +3,7 @@
 TransVer vám umožňuje zkontrolovat:
 
 1. Alignaci vrstev ort a fon, tj. jestli byla při vytváření fonetického přepisu
-   do vrstvy fon správně doplněna svislítka "|" a rovnítka "="; viz podrobný
+   do vrstvy fon správně doplněna svislítka `|` a rovnítka `=`; viz podrobný
    návod a postup [zde](./alignace.md).
 
 2. Délky segmentů na vrstvě ort, tj. jestli je splněn požadavek maximálně 25
