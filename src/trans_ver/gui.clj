@@ -1,5 +1,6 @@
 (ns trans-ver.gui
   (require [trans-ver.eaf-check :as eaf]
+           [trans-ver.formatting :as frmt]
            [clojure.java.io :as io]
            [clojure.string :as str])
   (use seesaw.core
@@ -82,7 +83,7 @@
   (let [new-eaf-file (str (.getParent (.getAbsoluteFile file))
                           file-sep
                           (str/replace (.getName file) #"\.eaf" " ")
-                          (new java.util.Date)
+                          (frmt/windows-filename-compliant-string (new java.util.Date))
                           ".eaf")
         feedback-str (str "Vytvořen soubor \"" new-eaf-file
                       "\" s vrstvou KONTROLA DÉLKY SEGMENTŮ.\n\n")]

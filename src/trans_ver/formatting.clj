@@ -66,3 +66,9 @@
             (mod (int (/ millis 1000 60)) 60)
             (mod (int (/ millis 1000)) 60)
             (rem millis 1000))))
+
+;; UTILITY
+(defn windows-filename-compliant-string [stringable]
+  (-> stringable
+      str
+      (str/replace #"[\"\*:<>\?\\/\|]" "_")))
