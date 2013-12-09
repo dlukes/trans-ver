@@ -9,4 +9,7 @@
                  ;; [org.clojure/data.xml "0.0.7"]]
   :main ^:skip-aot trans-ver.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :javac-target "1.6"
+  :profiles {:uberjar {:aot :all}
+             ;:uberjar {:aot [trans-ver.core]}
+             })

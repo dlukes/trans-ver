@@ -15,7 +15,9 @@ obsahující přepis sondy v programu [ELAN](tla.mpi.nl/tools/tla-tools/elan/)
 podle platných interních pravidel ÚČNK.
 
 Zpětnou vazbu posílejte na e-mailovou adresu uvedenou
-[v mém profilu na githubu](http://github.com/dafydd-lukes/).
+[v mém profilu na githubu](http://github.com/dafydd-lukes/), nebo použijte
+přímo
+[rozhraní githubu pro hlášení problémů](http://github.com/dafydd-lukes/trans-ver/issues).
 
 ## Instalace
 
