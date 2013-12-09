@@ -1,5 +1,11 @@
 # Alignace vrstev ort a fon
 
+*Upozornění*: detailní popis pravidel a značek, kterými se v přepisu na stopě
+fon zachycuje alignace s vrstvou ort, je dostupný
+[zde](https://www.dropbox.com/s/124flmnmtwx6xgm/alignace_ort_a_fon.pdf), včetně
+vysvětlení, proč je alignace nutná, a příkladů. Pokud s alignací ještě nejste
+obeznámeni, přečtěte si nejprve prosím výše uvedený dokument.
+
 Tento návod popisuje, jak využít informace o chybách v alignaci vrstev ort a
 fon, které vám TransVer poskytuje. Předpokládá, že už jste program úspěšně
 spustili a výsledky kontroly máte k dispozici; pokud ne a nevíte si s ovládáním

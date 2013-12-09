@@ -31,7 +31,7 @@ potřeba přepis projít a každý segment, který je vyznačen i v nové kontro
 vrstvě, rozdělit na příslušné množství segmentů menších (viz postup rozdělování
 segmentů v manuálu programu ELAN, sekce 3.8 Rozdělení segmentu). K tomu vám má
 orientačně pomoci počet slov v daném segmentu, který je uvedený v anotaci
-kontrolního segmentu: např. "PŘÍLIŠ DLOUHÝ SEGEMENT: 30" znamená, že segment
+kontrolního segmentu: např. "PŘÍLIŠ DLOUHÝ SEGMENT: 30" znamená, že segment
 obsahuje 30 slov.
 
 V praxi by bylo samozřejmě příliš pracné počítat délky nově vzniklých segmentů
@@ -41,5 +41,5 @@ zkontrolovat TransVerem a případné zbývající dlouhé segmenty (mezi těmi 
 vytvořenými) rozdělit při tomto druhém průchodu.
 
 Po poslední kontrole prostřednictvím TransVeru se ujistěte, že soubor .eaf
-skutečně neobsahuje již žádné segmenty delší než 25 slov a vrstvu `KONTROLA
+skutečně neobsahuje již žádné segmenty delší než 25 slov, a vrstvu `KONTROLA
 DÉLKY SEGMENTŮ` případně smažte.
