@@ -37,24 +37,32 @@
 
 ;; format output XML (eaf) with KONTROLA tier
 
-(defn apostrophe->tab [string]
-  "Replace former tabs with spaces and apostrophes with tabs."
-    (-> string
-        (str/replace #"\t" " ")
-        (str/replace #"'" "\t")))
+;; (defn apostrophe->tab [string]
+;;   "Replace former tabs with spaces and apostrophes with tabs."
+;;   (-> string
+;;       (str/replace #"\t" " ")
+;;       (str/replace #"'" "\t")))
 
 (defn xml-escapes [string]
   (-> string
+      (str/replace #"&" "&amp;")
       (str/replace #"\"" "&quot;")
       (str/replace #"'" "&apos;")
       (str/replace #"<" "&lt;")
-      (str/replace #">" "&gt;")
-      (str/replace #"&" "&amp;")))
+      (str/replace #">" "&gt;")))
+
+(defn strip-line-breaks-in-content [string]
+  "Prevent text inside tags in outputted XML from being on a line of its own."
+  (str/replace string #"\r?\n([^<][^\r\n]*)\r?\n" "$1"))
 
 (defn pre-process [elem]
   (if (string? elem)
     (-> elem
-        apostrophe->tab
+        ;; there should be no apostrophes in XML anyway, let's rather change
+        ;; them all to &apos; with xml-escapes (perhaps they're allowed in
+        ;; attributes, I might want to fix this some time later on... but this
+        ;; error is safer than potentially leaving apostrophes inside tags)
+;;        apostrophe->tab
         xml-escapes)
     elem))
 
@@ -62,8 +70,9 @@
   (-> eaf
       (#(walk/postwalk pre-process %))
       (#(with-out-str (xml/emit %)))
-      (str/replace #"'" "\"")
-      (str/replace #"\t" "'")))
+      strip-line-breaks-in-content
+      (str/replace #"'" "\"")))
+      ;; (str/replace #"\t" "'")))
 
 ;; converting millis
 
