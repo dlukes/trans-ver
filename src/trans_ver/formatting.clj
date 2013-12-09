@@ -37,18 +37,30 @@
 
 ;; format output XML (eaf) with KONTROLA tier
 
-(defn apostrophe->tab [elem]
-  "If elem is a string, replace former tabs with spaces and apostrophes with
-  tabs."
+(defn apostrophe->tab [string]
+  "Replace former tabs with spaces and apostrophes with tabs."
+    (-> string
+        (str/replace #"\t" " ")
+        (str/replace #"'" "\t")))
+
+(defn xml-escapes [string]
+  (-> string
+      (str/replace #"\"" "&quot;")
+      (str/replace #"'" "&apos;")
+      (str/replace #"<" "&lt;")
+      (str/replace #">" "&gt;")
+      (str/replace #"&" "&amp;")))
+
+(defn pre-process [elem]
   (if (string? elem)
     (-> elem
-        (str/replace #"\t" " ")
-        (str/replace #"'" "\t"))
+        apostrophe->tab
+        xml-escapes)
     elem))
 
 (defn xmlrepr->str [eaf]
   (-> eaf
-      (#(walk/postwalk apostrophe->tab %))
+      (#(walk/postwalk pre-process %))
       (#(with-out-str (xml/emit %)))
       (str/replace #"'" "\"")
       (str/replace #"\t" "'")))
