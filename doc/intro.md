@@ -15,7 +15,7 @@ TransVer vám umožňuje zkontrolovat:
 Pokud si nejste jisti, jak ovládat grafické rozhraní programu, návod naleznete
 v následující sekci.
 
-## Jak používat TransVer<a name="ovladani"></a>
+## Jak TransVer používat<a name="ovladani"></a>
 
 Zde si obecně popíšeme způsob práce s programem. Ten vypadá následovně:
 

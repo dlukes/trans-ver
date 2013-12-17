@@ -96,7 +96,7 @@
    :attrs
    {:ANNOTATOR "TransVer",
     :DEFAULT_LOCALE "cs",
-    :LINGUISTIC_TYPE_REF "meta",
+    :LINGUISTIC_TYPE_REF "ortografický",
     :PARTICIPANT "všichni",
     :TIER_ID "KONTROLA DÉLKY SEGMENTŮ"},
    :content []})
