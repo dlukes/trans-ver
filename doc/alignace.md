@@ -2,9 +2,10 @@
 
 *Upozornění*: detailní popis pravidel a značek, kterými se v přepisu na stopě
 fon zachycuje alignace s vrstvou ort, je dostupný
-[zde](https://www.dropbox.com/s/124flmnmtwx6xgm/alignace_ort_a_fon.pdf), včetně
-vysvětlení, proč je alignace nutná, a příkladů. Pokud s alignací ještě nejste
-obeznámeni, přečtěte si nejprve prosím výše uvedený dokument.
+[zde](https://trnka.korpus.cz/mluvka2/wiki/doku.php?id=alignace) (po přihlášení
+do databáze Mluvka2), včetně vysvětlení, proč je alignace nutná, a
+příkladů. Pokud s alignací ještě nejste obeznámeni, přečtěte si nejprve prosím
+výše uvedený dokument.
 
 Tento návod popisuje, jak využít informace o chybách v alignaci vrstev ort a
 fon, které vám TransVer poskytuje. Předpokládá, že už jste program úspěšně
