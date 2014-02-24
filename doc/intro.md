@@ -2,16 +2,16 @@
 
 TransVer vám umožňuje zkontrolovat:
 
-1. Alignaci vrstev ort a fon, tj. jestli byla při vytváření fonetického přepisu
-   do vrstvy fon správně doplněna svislítka `|` a rovnítka `=`; viz podrobný
-   návod a postup [zde](./alignace.md). Pokud s pravidly, kterými v přepisu
-   stopy fon dosahujeme alignace se stopou ort, ještě nejste seznámeni,
+1. **Alignaci vrstev ort a fon**, tj. jestli byla při vytváření fonetického
+   přepisu do vrstvy fon správně doplněna svislítka `|` a rovnítka `=`; viz
+   podrobný návod a postup [zde](./alignace.md). Pokud s pravidly, kterými v
+   přepisu stopy fon dosahujeme alignace se stopou ort, ještě nejste seznámeni,
    přečtěte si prosím
    [tento dokument](https://trnka.korpus.cz/mluvka2/wiki/doku.php?id=alignace)
    (dostupný až po přihlášení do databáze Mluvka2).
 
-2. Délky segmentů na vrstvě ort, tj. jestli je splněn požadavek maximálně 25
-   slov na segment; viz podrobný návod a postup [zde](./delky_segmentu.md).
+2. **Délky segmentů na vrstvě ort**, tj. jestli je splněn požadavek maximálně
+   25 slov na segment; viz podrobný návod a postup [zde](./delky_segmentu.md).
 
 Pokud si nejste jisti, jak ovládat grafické rozhraní programu, návod naleznete
 v následující sekci.
