@@ -76,3 +76,29 @@ Na závěr -- po opravení všech nahlášených chyb -- pro jistotu spusťte Tr
 ještě naposledy jednou, abyste se ujistili, že vám žádná nesrovnalost v
 alignaci opravdu neunikla. Alignaci totiž zaznamenáváme kvůli dalšímu
 počítačovému zpracování přepisů a má smysl pouze v případě, že je bezchybná.
+
+# Další typy chyb a jejich řešení -- příklady
+
+## Přebytečné svislítko
+
+Občas se může stát, že svislítko omylem vložíte hned vedle mezery[^1],
+např. původní ortografický přepis "[ne] no [až]" převedete na fonetickou
+transkripci "[ne] no| [aš]". Takovéto přebytečné svislítko se projeví prázdným
+řádkem v chybové hlášce:
+
+    |   ort |   fon |
+    =================
+    | [ne]  | [ne]  |
+    |   no  |   no| |
+    |  [až] |       |
+    |       |  [aš] |
+
+V takovém případě stačí zbloudilé svislítko umazat a chyba zmizí.
+
+<!-- Významem takto umístěného svislítka je, že na ortu je zapsané slovo, které na -->
+<!-- fonu nemá samostatnou fonetickou realizaci (např. "v podstatě" může být -->
+<!-- vysloveno jako "|poctaťe" -- předložku "v" neslyšíme, ale víme, že ji mluvčí -->
+<!-- zamýšlel -->
+
+[^1]: V některých případech se svislítko takto umisťuje cíleně, více viz bod 2
+[zde][https://trnka.korpus.cz/mluvka2/wiki/doku.php?id=alignace#nektere_slozite_pripady_a_jejich_reseni].
