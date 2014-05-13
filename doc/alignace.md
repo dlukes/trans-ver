@@ -81,7 +81,7 @@ počítačovému zpracování přepisů a má smysl pouze v případě, že je b
 
 ## Přebytečné svislítko
 
-Občas se může stát, že svislítko omylem vložíte hned vedle mezery[^1],
+Občas se může stát, že svislítko omylem vložíte hned vedle mezery¹,
 např. původní ortografický přepis "[ne] no [až]" převedete na fonetickou
 transkripci "[ne] no| [aš]". Takovéto přebytečné svislítko se projeví prázdným
 řádkem v chybové hlášce:
@@ -100,5 +100,5 @@ V takovém případě stačí zbloudilé svislítko umazat a chyba zmizí.
 <!-- vysloveno jako "|poctaťe" -- předložku "v" neslyšíme, ale víme, že ji mluvčí -->
 <!-- zamýšlel -->
 
-[^1]: V některých případech se svislítko takto umisťuje cíleně, více viz bod 2
-[zde][https://trnka.korpus.cz/mluvka2/wiki/doku.php?id=alignace#nektere_slozite_pripady_a_jejich_reseni].
+¹ V některých případech se svislítko takto umisťuje cíleně, více viz bod 2
+[zde](https://trnka.korpus.cz/mluvka2/wiki/doku.php?id=alignace#nektere_slozite_pripady_a_jejich_reseni).
