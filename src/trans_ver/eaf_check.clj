@@ -154,8 +154,10 @@
 
 ;; - může hrát i roli spojovníku, takže v těsném sousedství s alfabetickým
 ;; znakem je specifické pro ort; zahodíme taky čísla, nemusí si odpovídat (ČT2
-;; vs. čé=te=dva)
-(def tier-specific-symbols #"-\p{L}|\p{L}-|[\{\}_\|=\*#\?\s\p{L}\d]")
+;; vs. čé=te=dva); a nakonec budeme ignorovat i kulaté závorky, zas tak moc na
+;; nich nezáleží
+(def symbols-that-need-not-match-between-tiers
+  #"-\p{L}|\p{L}-|[\{\}_\|=\*#\?\s\p{L}\d\(\)]")
 
 (defn valid-counterparts? [[str1 str2]]
   "True if:
@@ -173,8 +175,8 @@
   empty on fon, so they are treated as regular words."
   (let [match1 (matches? #"[\p{L}_\|]" str1),
         match2 (matches? #"[\p{L}_\|]" str2),
-        meta1 (str/replace str1 tier-specific-symbols "")
-        meta2 (str/replace str2 tier-specific-symbols "")]
+        meta1 (str/replace str1 symbols-that-need-not-match-between-tiers "")
+        meta2 (str/replace str2 symbols-that-need-not-match-between-tiers "")]
     (and
      (or
       (and match1 match2)
