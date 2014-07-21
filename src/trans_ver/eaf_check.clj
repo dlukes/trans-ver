@@ -1,13 +1,8 @@
 (ns trans-ver.eaf-check
   (:require [trans-ver.valtests :as vt]
             [trans-ver.formatting :as frmt]
-            [clojure.xml :as xml]))
-            ;; [clojure.data.xml :as xml]
-            ;; prxml
-            ;; [clojure.java.io :as io]
-            ;; [clojure.walk :as walk]
-            ;; [clojure.string :as str]))
-
+            [clojure.xml :as xml]
+            [clojure.string :as str]))
 
 ;; this would work to convert between clojure.xml and clojure.data.xml
 ;; representations of xml structure (with perhaps a few slight modifications) if
@@ -152,51 +147,46 @@
                #(conj % ts1-annot ts2-annot))))
     (frmt/xmlrepr->str @eaf-atom)))
 
-;; (defn list->vec [elem]
-;;   (if (seq? elem)
-;;     (vec elem)
-;;     elem))
-
-;; (defn summarize-seg-length-errors [eaf eaf-ort times]
-;;   "Return hash-map representation of .eaf file with seg length error tier."
-;;   (let [eaf-atom (atom (walk/postwalk list->vec eaf))
-;;         ;; we need to know at which index we'll be putting the new tier in the
-;;         ;; :content of the eaf
-;;         last-idx (count (:content eaf))]
-;;     (swap! eaf-atom update-in [:content] #(conj % tier-template))
-;;     (doseq [error (seg-lengths-in-ort eaf-ort)]
-;;       (let [{:keys [id ts1 ts2 length]} error,
-;;             err-id (str "err-" id),
-;;             err-ts1 (str "err-" ts1),
-;;             err-ts2 (str "err-" ts2),
-;;             error-annot (assoc-in annot-template [:content 0 :attrs]
-;;                                   {:ANNOTATION_ID err-id,
-;;                                    :TIME_SLOT_REF1 err-ts1,
-;;                                    :TIME_SLOT_REF2 err-ts2})]
-;;         (swap! eaf-atom update-in [:content last-idx :content]
-;;                #(conj % error-annot))))
-;;     @eaf-atom))
-
 ;;;; ALIGNMENT
 
 (defn matches? [regex string]
   ((complement nil?) (re-find regex string)))
 
-(defn both-alph-or-none-alph? [[str1 str2]]
-  "True if both strings in argument vector contain alphabetic characters or
-  none of them does."
+;; - může hrát i roli spojovníku, takže v těsném sousedství s alfabetickým
+;; znakem je specifické pro ort; zahodíme taky čísla, nemusí si odpovídat (ČT2
+;; vs. čé=te=dva)
+(def tier-specific-symbols #"-\p{L}|\p{L}-|[\{\}_\|=\*#\?\s\p{L}\d]")
+
+(defn valid-counterparts? [[str1 str2]]
+  "True if:
+
+  - both strings in argument vector contain alphabetic characters
+    (including _ and |, which are parts of words on fon) or none of them does
+
+  AND
+
+  - after stripping all alphabetic characters + whitespace + symbols only used
+    on the ort or fon layer ({, }, _, |, =, *, #, ?), both strings are the same
+    (i.e., all shared auxiliary characters must be the same)
+
+  Remember that 'SLOVOBEZFONREALIZACE' has been substituted for words
+  empty on fon, so they are treated as regular words."
   (let [match1 (matches? #"[\p{L}_\|]" str1),
-        match2 (matches? #"[\p{L}_\|]" str2)]
-    (or
-     (and match1 match2)
-     (and (not match1) (not match2)))))
+        match2 (matches? #"[\p{L}_\|]" str2),
+        meta1 (str/replace str1 tier-specific-symbols "")
+        meta2 (str/replace str2 tier-specific-symbols "")]
+    (and
+     (or
+      (and match1 match2)
+      (and (not match1) (not match2)))
+     (= meta1 meta2))))
 
 (defn alignment-of-annot [ort-annot fon-annot]
   ;; take apart annotations
   (let [;; the ort annotation
         [ort-align-annot] (:content ort-annot),
         {ort-id :ANNOTATION_ID ts1 :TIME_SLOT_REF1 ts2 :TIME_SLOT_REF2} (:attrs
-  ort-align-annot),
+                                                                         ort-align-annot),
         [ort-annot-val] (:content ort-align-annot),
         [ort-cont] (:content ort-annot-val)
         ;; the fon annotation
@@ -212,8 +202,12 @@
     ;; ["to " "|" "já " "nevím " ".."]
     (if (or
          (not= (count ort-tokens) (count fon-tokens))
-         (not (every? both-alph-or-none-alph? (map vector ort-tokens
-                                                   fon-tokens))))
+         (not (every? valid-counterparts? (map vector ort-tokens
+                                               fon-tokens)))
+         ;; _ is an indicator that a word boundary should follow; if there's
+         ;; none → transcription error
+         (some (partial matches? #"_[^\| ]") fon-tokens))
+      ;;(do (pprint ort-tokens) (pprint fon-tokens)
       {:ort
        {:cont ort-tokens}
        :fon
@@ -236,8 +230,6 @@
              (map alignment-of-annot
                   (:content ort-tier)
                   (:content fon-tier))}))
-
-;             (remove nil?)))))
 
 (defn summarize-alignment-errors [eaf-ort eaf-fon times-id->val]
   "Return a string which describes alignment errors in eaf-ort vs eaf-fon."

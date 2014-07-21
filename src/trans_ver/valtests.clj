@@ -22,17 +22,20 @@
   ;; taky pozor na whitespace před a za posledními písmeny (na případných
   ;; neshodách v tomhle zhavarovat nechceme)
   (let [cleaned-seg (-> seg
+                        ;; vsunout placeholdery za slova bez fon realizace
+                        (str/replace #"\|([^\p{Ll}_])" "|SLOVOBEZFONREALIZACE$1")
+                        (str/replace #"([^\p{Ll}_])\|" "$1SLOVOBEZFONREALIZACE|")
                         (str/replace #"\n" " ")
                         (str/replace #"^\s+" "")
                         (str/replace #"\s+$" "")
                         ;; scuknout otazníky ...
                         (str/replace #"\s+\?" "?")
                         ;; ... označit hranice tokenů...
-                        (str/replace #"(\s+|\|)" "$1^")
+                        (str/replace #"(\s+|\|)" "$1HRANICETOKENU")
                         ;; ... a zase rozcuknout otazníky
                         (str/replace #"\?" " ?")
                         )]
-      (str/split cleaned-seg #"\^")))
+      (str/split cleaned-seg #"HRANICETOKENU")))
 
       ;; (re-seq #"\S+\s+(?:\?\S*)?" cleaned-seg)
       ;; (re-seq #"[^\s\|]+(?:\s+|\|)" cleaned-seg))))

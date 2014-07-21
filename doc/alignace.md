@@ -81,24 +81,104 @@ počítačovému zpracování přepisů a má smysl pouze v případě, že je b
 
 ## Přebytečné svislítko
 
-Občas se může stát, že svislítko omylem vložíte hned vedle mezery¹,
-např. původní ortografický přepis "[ne] no [až]" převedete na fonetickou
-transkripci "[ne] no| [aš]". Takovéto přebytečné svislítko se projeví prázdným
-řádkem v chybové hlášce:
+Občas se může stát, že svislítko omylem vložíte hned vedle mezery,
+např. původní ortografický přepis *[ne] no [až]* převedete na fonetickou
+transkripci *[ne] no| [aš]*.
 
-    |   ort |   fon |
-    =================
-    | [ne]  | [ne]  |
-    |   no  |   no| |
-    |  [až] |       |
-    |       |  [aš] |
+    |   ort |                   fon |
+    =================================
+    | [ne]  |                 [ne]  |
+    |   no  |                   no| |
+    |  [až] | SLOVOBEZFONREALIZACE  |
+    |       |                  [aš] |
 
-V takovém případě stačí zbloudilé svislítko umazat a chyba zmizí.
+Takovýto zápis normálně znamená, že po slovu *no* následuje slovo, o němž
+bezpečně víme, že ho mluvčí zamýšlel, ale nemá žádnou zvukovou (fonetickou)
+realizaci (na což vás program upozorní tím, že do tabulky umístí pomocný
+řetězec `SLOVOBEZFONREALIZACE`).¹ V tomto případě je to ovšem omyl, protože na
+vrstvě ort mezi slovy *no* a *až* žádné slovo navíc není. Stačí tedy zbloudilé
+svislítko umazat a chyba zmizí.
 
-<!-- Významem takto umístěného svislítka je, že na ortu je zapsané slovo, které na -->
-<!-- fonu nemá samostatnou fonetickou realizaci (např. "v podstatě" může být -->
-<!-- vysloveno jako "|poctaťe" -- předložku "v" neslyšíme, ale víme, že ji mluvčí -->
-<!-- zamýšlel -->
+## Posunutá hranice závorky
 
-¹ V některých případech se svislítko takto umisťuje cíleně, více viz bod 2
+Chybou je i případ, kde je hranice kulatých `()` či hranatých závorek `[]`
+umístěna na obou vrstvách jinde (závorky složené `{}`jsou pouze na vrstvě fon,
+takže roli v tomto ohledu nehrají). Např. zde:
+
+    Segment č. 134 v této vrstvě; čas: 00:18:48.400.
+    |      ort |       fon |
+    ========================
+    |      ty  |      {ti| |
+    | nebudou  | nebədou}  |
+    |   tikat  |     ťika  |
+    |      ty  |      [ti| |
+    | [druhý]  |   druhí]  |
+    |      ..  |       ..  |
+    |      ne  |       né  |
+    |       .. |        .. |
+
+Na ortu je v překryvu pouze *[druhý]*, na fonu *[ti|druhí]*; je tedy potřeba
+upravit ort na *[ty druhý]*.
+
+## Porušení symetrie u pauz (., ..) či hezitací (@)
+
+    Segment č. 89 v této vrstvě; čas: 00:08:17.508.
+    |       ort |       fon |
+    =========================
+    |     jako  |     jako  |
+    |  [jestli  |     [esi| |
+    |      tam  |      tam  |
+    | náhodou]  | náhodou]  |
+    |     něco  |     ňeco  |
+    |   nevidí  |   neviďí  |
+    |       ..  |        .  |
+
+Vrstva ort má pauzu, vrstva fon pouze předěl -- je potřeba zápis
+sjednotit. Podobně s hezitacemi:
+
+    Segment č. 13 v této vrstvě; čas: 00:03:50.110.
+    |      ort |      fon |
+    =======================
+    |      ve  |      ve| |
+    | čtvrtek  | štvrtek  |
+    |       s  |      ss| |
+    |        @ |        ǝ |
+
+Na vrstvě ort je značena hezitace *@*, na vrstvě fon místo ní *ǝ*. Toto je
+potřeba sjednotit -- buď nechat na ortu pouze *s* a fon přepsat jako *ssǝ*, nebo
+zachovat hezitaci na ortu (*s @*) a doplnit ji i na fonu (podle uvážení a zvuku
+buď *ssǝ @* nebo *ss @*.
+
+Podobný problém může nastat, když je porušena symetrie u dalších speciálních
+značek sdílených oběma vrstvami fon a ort -- např. záměna navazovacího znaku
+*+* za znak přerušené výpovědi *-* apod.
+
+## Znak sdílení hlásky (_) uvnitř slova
+
+Sdílení hlásky značíme pouze na hranici dvou slov (nedává smysl, aby jedno
+slovo hlásku "sdílelo" samo se sebou). TransVer tedy ohlásí chybu, pokud
+bezprostředně po znaku pro sdílení hlásky `_` nenajde hranici slova (svislítko
+`|` nebo mezeru):
+
+    Segment č. 287 v této vrstvě; čas: 00:27:08.371.
+    |      ort |                   fon |
+    ====================================
+    |      no  |                   no  |
+    |       .  |                    .  |
+    |     tak  |                  tak| |
+    |      to  |                   tə| |
+    |      je  |                    e  |
+    |   dobrý  |                dobrí  |
+    |     tak  |                  tak| |
+    |       v  |                    f| |
+    |   pátek  |                padeg  |
+    | [můžeme  |             [mužem_e| |
+    |     jet  | SLOVOBEZFONREALIZACE  |
+    |   spolu] |                  spo] |
+
+Ve slově *mužem_e* je `_` uprostřed slova, přitom se asi editor snažil
+naznačit, že koncové *e* je sdílené i následujícím slovesem *jet*. Řešení je
+jednoduché: umístíme `|`, kam patří, tj. ihned za `_`.
+
+¹ Více o zápisu slov bez fonetické realizace viz bod 2
 [zde](https://trnka.korpus.cz/mluvka2/wiki/doku.php?id=alignace#nektere_slozite_pripady_a_jejich_reseni).
