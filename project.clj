@@ -1,4 +1,4 @@
-(defproject trans-ver "0.3.1"
+(defproject trans-ver "0.4.0"
   :description "Transcription Verifier for spoken data collection at CNC [korpus.cz]"
   :url "http://github.com/dafydd-lukes/trans-ver"
   :license {:name "GPLv3"
