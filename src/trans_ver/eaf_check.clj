@@ -207,8 +207,8 @@
          (not (every? valid-counterparts? (map vector ort-tokens
                                                fon-tokens)))
          ;; _ is an indicator that a word boundary should follow; if there's
-         ;; none → transcription error
-         (some (partial matches? #"_[^\| ]") fon-tokens))
+         ;; none (i.e. if _ is followed by a letter) → transcription error
+         (some (partial matches? #"_\p{L}") fon-tokens))
       ;;(do (pprint ort-tokens) (pprint fon-tokens)
       {:ort
        {:cont ort-tokens}
