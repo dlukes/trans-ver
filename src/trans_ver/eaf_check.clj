@@ -179,6 +179,18 @@
 
 ;;;; ALIGNMENT
 
+(defn matches? [regex string]
+  ((complement nil?) (re-find regex string)))
+
+(defn both-alph-or-none-alph? [[str1 str2]]
+  "True if both strings in argument vector contain alphabetic characters or
+  none of them does."
+  (let [match1 (matches? #"[\p{L}_\|]" str1),
+        match2 (matches? #"[\p{L}_\|]" str2)]
+    (or
+     (and match1 match2)
+     (and (not match1) (not match2)))))
+
 (defn alignment-of-annot [ort-annot fon-annot]
   ;; take apart annotations
   (let [;; the ort annotation
@@ -195,7 +207,13 @@
         ;; count alignment tokens (- 1, to be precise)
         ort-tokens (vt/alignment-tokens ort-cont)
         fon-tokens (vt/alignment-tokens fon-cont)]
-    (if (not= (count ort-tokens) (count fon-tokens))
+    ;; example ort-tokens and fon-tokens:
+    ;; ["+ " "to " "já " "nevím " ".."]
+    ;; ["to " "|" "já " "nevím " ".."]
+    (if (or
+         (not= (count ort-tokens) (count fon-tokens))
+         (not (every? both-alph-or-none-alph? (map vector ort-tokens
+                                                   fon-tokens))))
       {:ort
        {:cont ort-tokens}
        :fon
