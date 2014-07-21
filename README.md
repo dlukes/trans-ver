@@ -21,20 +21,20 @@ přímo
 
 ## Instalace
 
-Stáhněte si soubor `trans-ver-standalone.jar` z následující adresy:
-https://www.dropbox.com/s/h40i3nni28knkmy/trans-ver-standalone.jar
+Stáhněte si soubor `trans-ver-<č. verze programu>-standalone.jar` z následující
+adresy: https://trnka.korpus.cz/~lukes/trans-ver-0.4.0-standalone.jar
 
 ## Použití
 
 Pokud je váš systém (Windows, Linux, MacOSX) správně nastaven, měl by jít
-program spustit pouhým dvojkliknutím na soubor `trans-ver-standalone.jar`
-(pokud ne, viz sekce [Řešení problémů](#problemy)).
+program spustit pouhým dvojkliknutím na soubor `trans-ver-<č. verze
+programu>-standalone.jar` (pokud ne, viz sekce [Řešení problémů](#problemy)).
 
 V případě potřeby (např. kvůli sledování chybových hlášek) lze TransVer spustit
 i z příkazového řádku (pokud máte správně nastavenou cestu k programu `java`),
 a to následovně:
 
-    $ java -jar trans-ver-standalone.jar
+    $ java -jar trans-ver-<č. verze programu>-standalone.jar
 
 Dokumentace k programu je dostupná [zde](./doc/intro.md).
 
@@ -44,7 +44,7 @@ Dokumentace k programu je dostupná [zde](./doc/intro.md).
    dostupné z http://www.java.com/download.
 
 2. Pokud v systému **Windows nefunguje spouštění dvojklikem** na soubor
-   `trans-ver-standalone.jar`:
+   `trans-ver-<č. verze programu>-standalone.jar`:
 
     - klikněte na soubor pravým tlačítkem
     - z menu zvolte *Otevřít v programu* → *Zvolit výchozí program...*
