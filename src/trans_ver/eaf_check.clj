@@ -210,12 +210,12 @@
          ;; _ is an indicator that a word boundary should follow; if there's
          ;; none (i.e. if _ is followed by a letter) → transcription error
          (some (partial matches? #"_\p{L}") fon-tokens))
-      (do (pprint ort-tokens) (pprint fon-tokens)
+      ;; (do (pprint ort-tokens) (pprint fon-tokens)
       {:ort
        {:cont ort-tokens}
        :fon
        {:cont fon-tokens}
-       :TIME_SLOT_REF1 ts1}))))
+       :TIME_SLOT_REF1 ts1})))
 
 (defn alignment-of-ort-and-fon [eaf-ort eaf-fon]
   "Return ort and fon segment pairs which are not aligned."
