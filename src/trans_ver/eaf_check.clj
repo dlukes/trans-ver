@@ -163,7 +163,8 @@
   "True if:
 
   - both strings in argument vector contain alphabetic characters
-    (including _ and |, which are parts of words on fon) or none of them does
+    (including _ and |, which are parts of words on fon) or digits
+    (= unintelligible words), or none of them does
 
   AND
 
@@ -173,8 +174,8 @@
 
   Remember that 'SLOVOBEZFONREALIZACE' has been substituted for words
   empty on fon, so they are treated as regular words."
-  (let [match1 (matches? #"[\p{L}_\|]" str1),
-        match2 (matches? #"[\p{L}_\|]" str2),
+  (let [match1 (matches? #"[\p{L}_\|\d]" str1),
+        match2 (matches? #"[\p{L}_\|\d]" str2),
         meta1 (str/replace str1 symbols-that-need-not-match-between-tiers "")
         meta2 (str/replace str2 symbols-that-need-not-match-between-tiers "")]
     (and
@@ -209,12 +210,12 @@
          ;; _ is an indicator that a word boundary should follow; if there's
          ;; none (i.e. if _ is followed by a letter) → transcription error
          (some (partial matches? #"_\p{L}") fon-tokens))
-      ;;(do (pprint ort-tokens) (pprint fon-tokens)
+      (do (pprint ort-tokens) (pprint fon-tokens)
       {:ort
        {:cont ort-tokens}
        :fon
        {:cont fon-tokens}
-       :TIME_SLOT_REF1 ts1})))
+       :TIME_SLOT_REF1 ts1}))))
 
 (defn alignment-of-ort-and-fon [eaf-ort eaf-fon]
   "Return ort and fon segment pairs which are not aligned."
