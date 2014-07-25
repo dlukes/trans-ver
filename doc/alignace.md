@@ -180,5 +180,8 @@ Ve slově *mužem_e* je `_` uprostřed slova, přitom se asi editor snažil
 naznačit, že koncové *e* je sdílené i následujícím slovesem *jet*. Řešení je
 jednoduché: umístíme `|`, kam patří, tj. ihned za `_`.
 
+Podobně TransVer zahlásí chybu také v případě, že je `_` umístěno na začátek
+druhého slov místo na konec prvního, např. `jag|_diš` místo `ja_|gdiš`.
+
 ¹ Více o zápisu slov bez fonetické realizace viz bod 2
 [zde](https://trnka.korpus.cz/mluvka2/wiki/doku.php?id=alignace#nektere_slozite_pripady_a_jejich_reseni).
