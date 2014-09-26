@@ -157,7 +157,7 @@
 ;; vs. čé=te=dva); a nakonec budeme ignorovat i kulaté závorky, zas tak moc na
 ;; nich nezáleží
 (def symbols-that-need-not-match-between-tiers
-  #"-\p{L}|\p{L}-|[\{\}_\|=\*#\?\s\p{L}\d\(\)]")
+  #"-\p{L}|\p{L}-|[$\{\}_\|=\*#\?\s\p{L}\d\(\)]")
 
 (defn valid-counterparts? [[str1 str2]]
   "True if:
@@ -168,9 +168,10 @@
 
   AND
 
-  - after stripping all alphabetic characters + whitespace + symbols only used
-    on the ort or fon layer ({, }, _, |, =, *, #, ?), both strings are the same
-    (i.e., all shared auxiliary characters must be the same)
+  - after stripping all alphabetic characters + whitespace + symbols that are
+    not required to be parallel, or are only used on the ort or fon layer ({,
+    }, _, |, =, *, #, ?), both strings are the same (i.e., all shared auxiliary
+    characters must be the same)
 
   Remember that 'SLOVOBEZFONREALIZACE' has been substituted for words
   empty on fon, so they are treated as regular words."
