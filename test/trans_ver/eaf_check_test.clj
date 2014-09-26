@@ -10,7 +10,7 @@
           ort (ort eaf)
           fon (fon eaf)
           errors (summarize-alignment-errors ort fon (second (times eaf)))]
-      (print errors)
+      ;; (print errors)
       (is (not (matches? #"Segment" errors))))))
 
 (deftest github-issue-2-test
@@ -20,7 +20,7 @@
           ort (ort eaf)
           fon (fon eaf)
           errors (summarize-alignment-errors ort fon (second (times eaf)))]
-      (print errors)
+      ;; (print errors)
       (is (not (matches? #"Segment" errors))))))
 
 (deftest github-issue-3-test
@@ -30,7 +30,7 @@
           ort (ort eaf)
           fon (fon eaf)
           errors (summarize-alignment-errors ort fon (second (times eaf)))]
-      (print errors)
+      ;; (print errors)
       (is (not (matches? #"SLOVOBEZFONREALIZACE" errors))))))
 
 (deftest github-issue-4-test
@@ -40,5 +40,5 @@
           ort (ort eaf)
           fon (fon eaf)
           errors (summarize-alignment-errors ort fon (second (times eaf)))]
-      (print errors)
+      ;; (print errors)
       (is (not (matches? #"Segment" errors))))))
