@@ -23,8 +23,8 @@
   ;; neshodách v tomhle zhavarovat nechceme)
   (let [cleaned-seg (-> seg
                         ;; vsunout placeholdery za slova bez fon realizace
-                        (str/replace #"\|([^\p{Ll}_\{\}])" "|SLOVOBEZFONREALIZACE$1")
-                        (str/replace #"([^\p{Ll}_\{\}])\|" "$1SLOVOBEZFONREALIZACE|")
+                        (str/replace #"\|([^\p{L}_\{\}])" "|SLOVOBEZFONREALIZACE$1")
+                        (str/replace #"([^\p{L}_\{\}])\|" "$1SLOVOBEZFONREALIZACE|")
                         (str/replace #"\n" " ")
                         (str/replace #"^\s+" "")
                         (str/replace #"\s+$" "")

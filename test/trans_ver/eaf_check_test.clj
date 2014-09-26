@@ -41,4 +41,4 @@
           fon (fon eaf)
           errors (summarize-alignment-errors ort fon (second (times eaf)))]
       ;; (print errors)
-      (is (not (matches? #"Segment" errors))))))
+      (is (not (matches? #"SLOVOBEZFONREALIZACE" errors))))))
