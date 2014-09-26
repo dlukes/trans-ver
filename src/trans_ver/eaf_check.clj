@@ -210,7 +210,7 @@
                                                fon-tokens)))
          ;; _ is an indicator that a word boundary should follow; if there's
          ;; none (i.e. if _ is followed by a letter) → transcription error
-         (some (partial matches? #"_\p{L}") fon-tokens))
+         (some (partial matches? #"_\p{Ll}") fon-tokens))
       ;; (do (pprint ort-tokens) (pprint fon-tokens)
       {:ort
        {:cont ort-tokens}
