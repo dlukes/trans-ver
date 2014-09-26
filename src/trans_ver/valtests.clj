@@ -21,7 +21,8 @@
   ;; bacha! mezi ort a fon se mažou "?" a "#"
   ;; taky pozor na whitespace před a za posledními písmeny (na případných
   ;; neshodách v tomhle zhavarovat nechceme)
-  (let [cleaned-seg (-> seg
+  (let [seg (or seg "")
+        cleaned-seg (-> seg
                         ;; vsunout placeholdery za slova bez fon realizace
                         (str/replace #"\|([^\p{L}_\{\}])" "|SLOVOBEZFONREALIZACE$1")
                         (str/replace #"([^\p{L}_\{\}])\|" "$1SLOVOBEZFONREALIZACE|")
