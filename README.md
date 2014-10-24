@@ -36,7 +36,8 @@ a to následovně:
 
     $ java -jar trans-ver-<č. verze programu>-standalone.jar
 
-Dokumentace k programu je dostupná [zde](./doc/intro.md).
+**Dokumentace** k programu včetně **návodu k použití**, který obsahuje i mnohé
+konkrétní příklady, je dostupná [zde](./doc/intro.md).
 
 ## Řešení problémů <a name="problemy"></a>
 
