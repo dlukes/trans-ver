@@ -41,8 +41,8 @@ konkrétní příklady, je dostupná [zde](./doc/intro.md).
 
 ## Řešení problémů <a name="problemy"></a>
 
-1. Mnoho problémů by mělo jít vyřešit instalací nejnovější verze Javy (JRE 7),
-   dostupné z http://www.java.com/download.
+1. Mnoho problémů by mělo jít vyřešit instalací nejnovější verze Javy (JRE 7 či
+   8), dostupné z http://www.java.com/download.
 
 2. Pokud v systému **Windows nefunguje spouštění dvojklikem** na soubor
    `trans-ver-<č. verze programu>-standalone.jar`:
