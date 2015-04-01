@@ -67,6 +67,6 @@ konkrétní příklady, je dostupná [zde](./doc/intro.md).
 
 ## License
 
-Copyright © 2013 David Lukeš
+Copyright © 2015 David Lukeš
 
 Distributed under the GNU General Public License v3.
