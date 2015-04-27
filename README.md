@@ -22,7 +22,7 @@ přímo
 ## Instalace
 
 Stáhněte si soubor `trans-ver-<č. verze programu>-standalone.jar` z následující
-adresy: https://trnka.korpus.cz/~lukes/trans-ver-0.4.1-standalone.jar
+adresy: https://trnka.korpus.cz/~lukes/trans-ver-0.5.0-standalone.jar
 
 ## Použití
 
