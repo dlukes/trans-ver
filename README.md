@@ -1,5 +1,8 @@
 # TransVer
 
+**Návod, jak TransVer používat při kontrole alignace a porozumět hlášeným chybám,
+je včetně několika příkladů k dispozici [zde](./doc/alignace.md).**
+
 ## [EN]
 
 A transcription verifier for the current spoken corpus project at the Czech
